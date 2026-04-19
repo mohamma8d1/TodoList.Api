@@ -12,6 +12,7 @@ public class UpdateTodoItemValidator : AbstractValidator<UpdateTodoCommand>
 {
     public UpdateTodoItemValidator()
     {
+
         RuleFor(x => x.title).NotEmpty().WithMessage("Title is Necessary").MaximumLength(100).WithMessage("Title can't be more than 100 char");
         RuleFor(x => x.description).MaximumLength(500).WithMessage("Description Lenght cant be more than 500 char")
             .NotEmpty().When(x => !string.IsNullOrEmpty(x.description));

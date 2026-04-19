@@ -52,12 +52,12 @@ namespace TodoList.Api.Controllers
         [HttpPatch("{id:guid}")]
         public async Task<ActionResult> UpdateTodo(Guid id, [FromBody] UpdateTodoItemDto dto)
         {
-            var command = new UpdateTodoCommand(id)
-            {
-                title = dto.title,
-                description = dto.description,
-                isComplete = dto.isComplete,
-            };
+            var command = new UpdateTodoCommand(
+                id,
+                dto.title,
+                dto.description,
+                dto.isComplete
+            );
 
             var result = await mediator.Send(command);
 
