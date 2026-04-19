@@ -20,7 +20,7 @@ public class GetTodoByIdHandler(ITodoItemRepository repository) : IRequestHandle
 
         return new TodoItemDto {
             id = todoItem.Id,
-            title = todoItem.Title,
+            title = todoItem.Title ?? string.Empty,
             description = todoItem.Description ?? string.Empty,
             CreatedAt = todoItem.CreatedAt,
         };

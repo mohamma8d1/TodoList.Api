@@ -9,4 +9,4 @@ using TodoList.Application.DTOs;
 
 namespace TodoList.Application.Features.Todos.Commands.CreateTodo;
 
-public class CreateTodoCommand(string Title, string? Description) : CreateTodoItemDto, ICommand<Guid> { }
+public record CreateTodoCommand(string title, string? description) : ICommand<Guid> { }
