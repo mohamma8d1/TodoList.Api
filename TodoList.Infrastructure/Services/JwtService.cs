@@ -8,11 +8,6 @@ using TodoList.Domain.Entities;
 
 namespace TodoList.Infrastructure.Services;
 
-public interface IJwtService
-{
-    string GenerateToken(User user);
-}
-
 public class JwtService(IConfiguration configuration) : IJwtService
 {
     public string GenerateToken(User user)
