@@ -1,6 +1,7 @@
 using AutoMapper;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -8,6 +9,7 @@ using TodoList.Api.Configurations;
 using TodoList.Application.Common.Behaviors;
 using TodoList.Application.Features.Todos.Commands.CreateTodo;
 using TodoList.Application.Features.Todos.Commands.UpdateTodo;
+using TodoList.Domain.Entities;
 using TodoList.Domain.Interfaces;
 using TodoList.Infrastructure.Data;
 using TodoList.Infrastructure.Repositories;
@@ -46,6 +48,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddIdentity<User, IdentityRole<Guid>>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
 var app = builder.Build();
 

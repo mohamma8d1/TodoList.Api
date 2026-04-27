@@ -1,9 +1,5 @@
 ﻿using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TodoList.Domain.Entities;
 using TodoList.Domain.Interfaces;
 
@@ -20,6 +16,7 @@ public class CreateTodoHandler(ITodoItemRepository repository) : IRequestHandler
             Description = request.description,
             IsComplete = false,
             CreatedAt = DateTime.Now,
+            UserId = request.UserId 
         };
 
         await repository.AddTodoAsync(todoItem);

@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using NuGet.Protocol.Plugins;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TodoList.Application.DTOs;
 using TodoList.Application.Features.Todos.Commands.CreateTodo;
@@ -41,11 +43,17 @@ namespace TodoList.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateTodo([FromBody] CreateTodoCommand command)
+        [Authorize]
+        public async Task<ActionResult> CreateTodo([FromBody] CreateTodoDto request)
         {
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out var userId))
+                return Unauthorized("Invalid user id");
+
+            var command = new CreateTodoCommand(userId, request.Title, request.Description);
             var id = await mediator.Send(command);
 
-            return CreatedAtAction(nameof(GetTodoById), new { id }, new { id, message = "Todo Created Sucessfuly" });
+            return CreatedAtAction(nameof(GetTodoById), new { id }, new { id, message = "Todo Created Successfully" });
         }
 
         [HttpPut("{id:guid}")]
