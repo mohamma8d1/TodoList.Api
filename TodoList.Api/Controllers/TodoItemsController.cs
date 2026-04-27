@@ -23,12 +23,21 @@ namespace TodoList.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class TodoItemsController(IMediator mediator) : ControllerBase
     {
+        private Guid GetUserId()
+        {
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out var userId))
+                throw new UnauthorizedAccessException("Invalid user id");
+            return userId;
+        }
 
         [HttpGet]
         public async Task<ActionResult<List<TodoItemDto>>> GetAllTodo([FromQuery] GetAllTodosQuery query)
         {
+            query.UserId = GetUserId();
             var result = await mediator.Send(query);
             return Ok(result);
         }
@@ -36,20 +45,17 @@ namespace TodoList.Api.Controllers
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<TodoItemDto>> GetTodoById(Guid id)
         {
-            var result = await mediator.Send(new GetTodoByIdQuery(id));
+            var userId = GetUserId();
+            var result = await mediator.Send(new GetTodoByIdQuery(id, userId));
             if (result == null)
                 return NotFound( new { message = "Todo Not Found" });
             return Ok(result);
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<ActionResult> CreateTodo([FromBody] CreateTodoDto request)
         {
-            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out var userId))
-                return Unauthorized("Invalid user id");
-
+            var userId = GetUserId();
             var command = new CreateTodoCommand(userId, request.Title, request.Description);
             var id = await mediator.Send(command);
 
@@ -60,8 +66,10 @@ namespace TodoList.Api.Controllers
         [HttpPatch("{id:guid}")]
         public async Task<ActionResult> UpdateTodo(Guid id, [FromBody] UpdateTodoItemDto dto)
         {
+            var userId = GetUserId();
             var command = new UpdateTodoCommand(
                 id,
+                userId,
                 dto.title,
                 dto.description,
                 dto.isComplete
@@ -78,7 +86,8 @@ namespace TodoList.Api.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult> DeleteTodo(Guid id)
         {
-            var result = await mediator.Send(new DeleteTodoCommand(id));
+            var userId = GetUserId();
+            var result = await mediator.Send(new DeleteTodoCommand(id, userId));
 
             if (!result)
                 return NotFound(new { message = "Not Found!" });
