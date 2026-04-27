@@ -13,6 +13,7 @@ using TodoList.Domain.Entities;
 using TodoList.Domain.Interfaces;
 using TodoList.Infrastructure.Data;
 using TodoList.Infrastructure.Repositories;
+using TodoList.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +43,8 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Creat
 //builder.Services.AddAutoMapper(typeof(TodoItemProfile));
 
 builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+builder.Services.AddScoped<IJwtService, JwtService>();
 
 builder.Services.AddControllers();
 
