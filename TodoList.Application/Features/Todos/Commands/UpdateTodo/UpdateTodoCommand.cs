@@ -6,6 +6,7 @@ namespace TodoList.Application.Features.Todos.Commands.UpdateTodo;
 
 public record UpdateTodoCommand(
     Guid id,
+    Guid userId,
     string? title,
     string? description,
     bool? isComplete

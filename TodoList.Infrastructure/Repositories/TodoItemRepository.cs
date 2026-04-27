@@ -28,10 +28,11 @@ public class TodoItemRepository(ApplicationDbContext context) : ITodoItemReposit
         int pageSize,
         string? searchTerm,
         bool? isComplete,
+        Guid userId,
         CancellationToken cancellationToken)
     {
-        var query = context.TodoItems.AsNoTracking();
-        
+        var query = context.TodoItems.Where(t => t.UserId == userId).AsNoTracking();
+
         // For Search Feature
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
@@ -57,7 +58,8 @@ public class TodoItemRepository(ApplicationDbContext context) : ITodoItemReposit
         return (items, totalCount);
     }
 
-    public Task<TodoItem?> GetTodoByIdAsync(Guid id, CancellationToken cancellationToken) => context.TodoItems.AsNoTracking().FirstOrDefaultAsync(t => t.Id == id,
+    public Task<TodoItem?> GetTodoByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken) => context.TodoItems.Where(e => e.UserId == userId).AsNoTracking()
+        .FirstOrDefaultAsync(t => t.Id == id,
         cancellationToken);
 
     public async Task UpdateTodoAsync(TodoItem todoItem, CancellationToken cancellationToken)

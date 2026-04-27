@@ -12,9 +12,9 @@ public class DeleteTodoHandler(ITodoItemRepository repository) : IRequestHandler
 {
     public async Task<bool> Handle(DeleteTodoCommand request, CancellationToken cancellationToken)
     {
-        var todoItem = await repository.GetTodoByIdAsync(request.id, cancellationToken);
+        var todoItem = await repository.GetTodoByIdAsync(request.id, request.userId, cancellationToken);
 
-        if (todoItem is null)
+        if (todoItem is null || todoItem.UserId != request.userId)
             return false;
 
         await repository.DeleteTodoAsync(request.id, cancellationToken);

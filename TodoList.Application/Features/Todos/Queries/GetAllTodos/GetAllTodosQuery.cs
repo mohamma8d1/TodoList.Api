@@ -15,4 +15,5 @@ public class GetAllTodosQuery : IRequest<PagedResult<TodoItemDto>>
     public int PageSize { get; set; } = 10;
     public string? SearchTerm { get; set; }
     public bool? IsComplete { get; set; }
+    public Guid UserId { get; set; }
 }

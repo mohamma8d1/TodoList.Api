@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 
 namespace TodoList.Application.Features.Todos.Commands.DeleteTodo;
 
-public record DeleteTodoCommand(Guid id) : IRequest<bool>;
+public record DeleteTodoCommand(Guid id, Guid userId) : IRequest<bool>;
 

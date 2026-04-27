@@ -10,12 +10,12 @@ public class UpdateTodoItemHandler(ITodoItemRepository repository) : IRequestHan
 {
     public async Task<TodoItemDto?> Handle(UpdateTodoCommand request, CancellationToken cancellationToken)
     {
-        var todoItem = await repository.GetTodoByIdAsync(request.id, cancellationToken);
+        var todoItem = await repository.GetTodoByIdAsync(request.id, request.userId, cancellationToken);
 
-        if (todoItem is null)
+        if (todoItem is null || todoItem.UserId != request.userId)
             return null;
 
-        if(!string.IsNullOrWhiteSpace(request.title))
+        if (!string.IsNullOrWhiteSpace(request.title))
             todoItem.Title = request.title;
 
         if(request.description != null)

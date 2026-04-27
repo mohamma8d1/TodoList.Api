@@ -19,6 +19,7 @@ public class GetAllTodosHandler(ITodoItemRepository repository) : IRequestHandle
             pageSize: request.PageSize,
             searchTerm: request.SearchTerm,
             isComplete: request.IsComplete,
+            userId: request.UserId,
             cancellationToken: cancellationToken);
 
         var totalPages = (int)Math.Ceiling(totalCount / (double)request.PageSize);

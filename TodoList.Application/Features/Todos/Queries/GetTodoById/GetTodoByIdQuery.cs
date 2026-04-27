@@ -8,4 +8,4 @@ using TodoList.Application.DTOs;
 
 namespace TodoList.Application.Features.Todos.Queries.GetTodoById;
 
-public record GetTodoByIdQuery(Guid id) : IRequest<TodoItemDto?>;
+public record GetTodoByIdQuery(Guid id, Guid userId) : IRequest<TodoItemDto?>;

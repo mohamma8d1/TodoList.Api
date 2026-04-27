@@ -13,7 +13,7 @@ public class GetTodoByIdHandler(ITodoItemRepository repository) : IRequestHandle
 {
     public async Task<TodoItemDto?> Handle(GetTodoByIdQuery request, CancellationToken cancellationToken)
     {
-        var todoItem = await repository.GetTodoByIdAsync(request.id, cancellationToken);
+        var todoItem = await repository.GetTodoByIdAsync(request.id, request.userId, cancellationToken);
 
         if(todoItem is null)
             return null;
